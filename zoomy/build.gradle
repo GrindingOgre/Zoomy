@@ -4,16 +4,16 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'zoomy'
 
-    publishedGroupId = 'com.ablanco.zoomy'
+    publishedGroupId = 'com.grindingogre.zoomy'
     libraryName = 'Zoomy'
     artifact = 'zoomy'
 
     libraryDescription = 'Zoomy is an easy to use pinch-to-zoom Android library Edit'
 
-    siteUrl = 'https://github.com/imablanco/Zoomy'
-    gitUrl = 'https://github.com/imablanco/Zoomy.git'
+    siteUrl = 'https://github.com/GrindingOgre/Zoomy'
+    gitUrl = 'https://github.com/GrindingOgre/Zoomy.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'ablanco'
     developerName = 'Alvaro Blanco'
