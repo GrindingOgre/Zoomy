@@ -36,11 +36,24 @@ class ZoomableTouchListener implements View.OnTouchListener, ScaleGestureDetecto
 
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector mGestureDetector;
-    private SimpleGestureListener mGestureListener = new SimpleGestureListener(){
+    private SimpleGestureListener mGestureListener = new SimpleGestureListener();
+
+    private GestureDetector.OnDoubleTapListener mDoubleTapGestureListener = new GestureDetector.OnDoubleTapListener() {
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            if(mTapListener != null) mTapListener.onTap(mTarget);
+        public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+            if(mTapListener != null) mTapListener.onTap(mTarget, motionEvent);
             return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent motionEvent) {
+            if(mDoubleTapListener != null) mDoubleTapListener.onDoubleTap(mTarget, motionEvent);
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+            return false;
         }
     };
 
@@ -57,6 +70,7 @@ class ZoomableTouchListener implements View.OnTouchListener, ScaleGestureDetecto
     private ZoomyConfig mConfig;
     private ZoomListener mZoomListener;
     private final TapListener mTapListener;
+    private final DoubleTapListener mDoubleTapListener;
 
     private Runnable mEndingZoomAction = new Runnable() {
         @Override
@@ -78,7 +92,7 @@ class ZoomableTouchListener implements View.OnTouchListener, ScaleGestureDetecto
 
 
     ZoomableTouchListener(Activity activity, View view, ZoomyConfig config, Interpolator interpolator,
-                          ZoomListener zoomListener, TapListener tapListener) {
+                          ZoomListener zoomListener, TapListener tapListener, DoubleTapListener doubleTapListener) {
         this.mActivity = activity;
         this.mTarget = view;
         this.mConfig = config;
@@ -86,8 +100,10 @@ class ZoomableTouchListener implements View.OnTouchListener, ScaleGestureDetecto
                 ? interpolator : new AccelerateDecelerateInterpolator();
         this.mScaleGestureDetector = new ScaleGestureDetector(activity, this);
         this.mGestureDetector = new GestureDetector(activity, mGestureListener);
+        this.mGestureDetector.setOnDoubleTapListener(mDoubleTapGestureListener);
         this.mZoomListener = zoomListener;
         this.mTapListener = tapListener;
+        this.mDoubleTapListener = doubleTapListener;
     }
 
     @Override
@@ -103,6 +119,7 @@ class ZoomableTouchListener implements View.OnTouchListener, ScaleGestureDetecto
         switch (action) {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
+                v.performClick();
                 switch (mState) {
                     case STATE_IDLE:
                         mState = STATE_POINTER_DOWN;
